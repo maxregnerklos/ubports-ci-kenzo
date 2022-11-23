@@ -1,6 +1,6 @@
 #=================================================
-# Description: Build ubports using GitHub Actions
-# Lisence: MIT
+# Description: Build ubports for dream2lte using GitHub Actions
+# Licence: MIT
 # Contributor: 0312birdzhang
 # Maintainer: Danct12
 # Credit: https://github.com/P3TERX/Actions-OpenWrt
@@ -21,8 +21,8 @@ jobs:
     runs-on: ubuntu-20.04
 
     env:
-      VENDOR: xiaomi
-      DEVICE: rolex
+      VENDOR: samsung
+      DEVICE: dream2lte
       ANDROID_ROOT: /home/runner/work/halium/
 
     steps:
@@ -48,7 +48,7 @@ jobs:
         mkdir -p ~/bin
         wget 'https://storage.googleapis.com/git-repo-downloads/repo' -P ~/bin
         chmod +x ~/bin/repo
-        git config --global user.name "UBports Redmi 4A CI"
+        git config --global user.name "UBports Galaxy S8+ CI"
         git config --global user.email "thisemaildoesnotexist@exist.com"
 
     - name: Downloading source code
@@ -56,9 +56,11 @@ jobs:
         source halium.env
         mkdir -p $ANDROID_ROOT
         cd $ANDROID_ROOT
-        repo init -u https://github.com/Halium/android -b halium-7.1 --depth=1
+        repo init -u https://github.com/Halium/android -b halium-9.0 --depth=1
         mkdir -p $ANDROID_ROOT/.repo/local_manifests
-        wget https://raw.githubusercontent.com/Halium/halium-devices/halium-7.1/manifests/"$VENDOR"_"$DEVICE".xml -O $ANDROID_ROOT/.repo/local_manifests/$DEVICE.xml
+        # will uncomment once merge request accepted on halium repo for manifest
+        #wget https://raw.githubusercontent.com/Halium/halium-devices/halium-9.0/manifests/"$VENDOR"_"$DEVICE".xml -O $ANDROID_ROOT/.repo/local_manifests/$DEVICE.xml
+        cp manifest $ANDROID_ROOT/.repo/local_manifests/$DEVICE.xml
         repo sync -j8 -c --no-clone-bundle --no-tags
     
     - name: Build HAL
@@ -75,22 +77,22 @@ jobs:
       uses: actions/upload-artifact@master
       with:
         name: hybris-boot image
-        path: /home/runner/work/halium/out/target/product/rolex/hybris-boot.img
+        path: /home/runner/work/halium/out/target/product/dream2lte/hybris-boot.img
 
     - name : Upload boot image
       uses: actions/upload-artifact@master
       with:
         name: halium-boot image
-        path: /home/runner/work/halium/out/target/product/rolex/halium-boot.img
+        path: /home/runner/work/halium/out/target/product/dream2lte/halium-boot.img
 
     - name : Upload recovery image
       uses: actions/upload-artifact@master
       with:
         name: Recovery image
-        path: /home/runner/work/halium/out/target/product/rolex/recovery.img
+        path: /home/runner/work/halium/out/target/product/dream2lte/recovery.img
 
     - name : Upload system image
       uses: actions/upload-artifact@master
       with:
         name: System image
-        path: /home/runner/work/halium/out/target/product/rolex/system.img
+        path: /home/runner/work/halium/out/target/product/dream2lte/system.img
