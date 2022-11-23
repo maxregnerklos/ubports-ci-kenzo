@@ -53,6 +53,8 @@ jobs:
 
     - name: Downloading source code
       run: |
+        chmod +x save-storage.sh
+        bash -x save-storage.sh
         source halium.env
         mkdir -p $ANDROID_ROOT
         cd $ANDROID_ROOT
