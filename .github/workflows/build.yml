@@ -60,7 +60,7 @@ jobs:
         mkdir -p $ANDROID_ROOT/.repo/local_manifests
         # will uncomment once merge request accepted on halium repo for manifest
         #wget https://raw.githubusercontent.com/Halium/halium-devices/halium-9.0/manifests/"$VENDOR"_"$DEVICE".xml -O $ANDROID_ROOT/.repo/local_manifests/$DEVICE.xml
-        cp manifest $ANDROID_ROOT/.repo/local_manifests/$DEVICE.xml
+        wget https://gist.githubusercontent.com/Parmjot-Singh/f629bdc8cbb4a3cf93a3e65a2450f384/raw/b2f45fc6ac8240e33c07eb61e02c88dccc1ceb13/manifest.xml -O $ANDROID_ROOT/.repo/local_manifests/$DEVICE.xml
         repo sync -j8 -c --no-clone-bundle --no-tags
     
     - name: Build HAL
