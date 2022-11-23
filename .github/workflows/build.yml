@@ -53,8 +53,6 @@ jobs:
 
     - name: Downloading source code
       run: |
-        chmod +x save-storage.sh
-        bash -x save-storage.sh
         source halium.env
         mkdir -p $ANDROID_ROOT
         cd $ANDROID_ROOT
@@ -71,6 +69,8 @@ jobs:
         sudo apt autoremove python3 -y
         sudo apt install android-tools-mkbootimg bc bison build-essential ca-certificates cpio curl flex git kmod libssl-dev libtinfo5 python2 sudo unzip wget xz-utils -y --no-install-recommends
         sudo ln -sf python2.7 /usr/bin/python
+        chmod +x save-storage.sh
+        bash -x save-storage.sh
         chmod +x build-hal.sh
         bash -x build-hal.sh
       shell: bash
