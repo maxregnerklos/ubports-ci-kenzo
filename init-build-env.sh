@@ -7,5 +7,5 @@ source build/envsetup.sh
 export USE_HOST_LEX=yes
 export USE_CCACHE=1
 breakfast $DEVICE
-make -j$(nproc) mkbootimg
-make -j$(nproc) e2fsdroid
+mka mkbootimg
+mka e2fsdroid
