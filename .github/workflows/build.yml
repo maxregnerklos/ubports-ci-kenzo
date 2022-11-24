@@ -60,22 +60,7 @@ jobs:
         large-packages: true
         swap-storage: false
     
-    - name: Cache build repo files
-      id: cache-repo
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-repo-files
-      with:
-        path: /home/runner/work/halium
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/DateStamp') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
-
-    - if: ${{ steps.cache-repo.outputs.cache-hit != 'true' }}
-      name: Download source code
-      continue-on-error: true
+    - name: Download source code
       run: |
         source halium.env
         mkdir -p $ANDROID_ROOT
@@ -91,7 +76,27 @@ jobs:
       run: |
         sudo apt update
         sudo apt autoremove python3 -y
-        sudo apt install android-tools-mkbootimg bc bison build-essential ca-certificates cpio curl flex git kmod libssl-dev libtinfo5 python2 sudo unzip wget xz-utils -y --no-install-recommends
+        sudo apt install -y --no-install-recommends \
+        openjdk-8-jdk android-tools-adb bc \
+        bison build-essential curl flex g++-multilib \
+        gcc-multilib gnupg gperf imagemagick lib32ncurses5-dev \
+        lib32readline-dev lib32z1-dev liblz4-tool \
+        libncurses5-dev libsdl1.2-dev libssl-dev \
+        libxml2 libxml2-utils lzop pngcrush rsync schedtool \
+        squashfs-tools xsltproc yasm zip zlib1g-dev git
+        
+        sudo docker rmi `docker images -q`
+        
+        sudo rm -rf \
+          /usr/share/dotnet \
+          /etc/mysql \
+          /etc/php
+        
+        sudo apt install  -y --no-install-recommends \
+        android-tools-mkbootimg bc bison build-essential \
+        ca-certificates cpio curl flex git kmod libssl-dev \
+        libtinfo5 python2 sudo unzip wget xz-utils
+        
         sudo ln -sf python2.7 /usr/bin/python
         chmod +x save-storage.sh
         bash -x save-storage.sh
