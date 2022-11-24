@@ -62,20 +62,20 @@ jobs:
           ${{ runner.os }}-build-
           ${{ runner.os }}-
 
-      - if: ${{ steps.cache-repo.outputs.cache-hit != 'true' }}
-        name: Download source code
-        continue-on-error: true
-        run: |
-          source halium.env
-          mkdir -p $ANDROID_ROOT
-          cd $ANDROID_ROOT
-          repo init -u https://github.com/Halium/android -b halium-9.0 --depth=1
-          mkdir -p $ANDROID_ROOT/.repo/local_manifests
-          # will uncomment once merge request accepted on halium repo for manifest
-          #wget https://raw.githubusercontent.com/Halium/halium-devices/halium-9.0/manifests/"$VENDOR"_"$DEVICE".xml -O $ANDROID_ROOT/.repo/local_manifests/$DEVICE.xml
-          wget https://gist.githubusercontent.com/Parmjot-Singh/f629bdc8cbb4a3cf93a3e65a2450f384/raw/b2f45fc6ac8240e33c07eb61e02c88dccc1ceb13/manifest.xml -O $ANDROID_ROOT/.repo/local_manifests/device.xml
-          repo sync -j8 -c --no-clone-bundle --no-tags
-      
+    - if: ${{ steps.cache-repo.outputs.cache-hit != 'true' }}
+      name: Download source code
+      continue-on-error: true
+      run: |
+        source halium.env
+        mkdir -p $ANDROID_ROOT
+        cd $ANDROID_ROOT
+        repo init -u https://github.com/Halium/android -b halium-9.0 --depth=1
+        mkdir -p $ANDROID_ROOT/.repo/local_manifests
+        # will uncomment once merge request accepted on halium repo for manifest
+        #wget https://raw.githubusercontent.com/Halium/halium-devices/halium-9.0/manifests/"$VENDOR"_"$DEVICE".xml -O $ANDROID_ROOT/.repo/local_manifests/$DEVICE.xml
+        wget https://gist.githubusercontent.com/Parmjot-Singh/f629bdc8cbb4a3cf93a3e65a2450f384/raw/b2f45fc6ac8240e33c07eb61e02c88dccc1ceb13/manifest.xml -O $ANDROID_ROOT/.repo/local_manifests/device.xml
+        repo sync -j8 -c --no-clone-bundle --no-tags
+    
     - name: Install build dependencies
       run: |
         sudo apt update
