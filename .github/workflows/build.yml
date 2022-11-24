@@ -77,23 +77,18 @@ jobs:
         sudo apt update
         sudo apt autoremove python3 -y
         sudo apt install -y --no-install-recommends \
-        openjdk-8-jdk android-tools-adb bc \
-        bison build-essential curl flex g++-multilib \
-        gcc-multilib gnupg gperf imagemagick lib32ncurses5-dev \
-        lib32readline-dev lib32z1-dev liblz4-tool \
-        libncurses5-dev libsdl1.2-dev libssl-dev \
-        libxml2 libxml2-utils lzop pngcrush rsync schedtool \
-        squashfs-tools xsltproc yasm zip zlib1g-dev git
+        openjdk-8-jdk android-tools-adb android-tools-mkbootimg bc \
+        bison build-essential ca-certificates cpio curl flex g++-multilib \
+        gcc-multilib gnupg gperf imagemagick kmod lib32ncurses5-dev \
+        lib32readline-dev lib32z1-dev libelf-dev liblz4-tool \
+        libncurses5-dev libsdl1.2-dev libssl-dev libtinfo5 \
+        libxml2 libxml2-utils lzop ncurses-dev pngcrush python2 rsync schedtool \
+        squashfs-tools unzip wget xsltproc xz-utils yasm zip zlib1g-dev git
         
         sudo rm -rf \
           /usr/share/dotnet \
           /etc/mysql \
           /etc/php
-        
-        sudo apt install  -y --no-install-recommends \
-        android-tools-mkbootimg bc bison build-essential \
-        ca-certificates cpio curl flex git kmod libssl-dev \
-        libtinfo5 python2 sudo unzip wget xz-utils
         
         sudo ln -sf python2.7 /usr/bin/python
         chmod +x save-storage.sh
