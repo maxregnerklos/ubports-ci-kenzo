@@ -7,7 +7,6 @@
 #=================================================
 
 name: Build System Image
-
 on: 
   push:
     branches:
@@ -16,7 +15,6 @@ on:
     types: [published]
 
 jobs:
-
   build:
     runs-on: ubuntu-20.04
 
@@ -51,18 +49,33 @@ jobs:
         git config --global user.name "UBports Galaxy S8+ CI"
         git config --global user.email "thisemaildoesnotexist@exist.com"
 
-    - name: Download source code
-      run: |
-        source halium.env
-        mkdir -p $ANDROID_ROOT
-        cd $ANDROID_ROOT
-        repo init -u https://github.com/Halium/android -b halium-9.0 --depth=1
-        mkdir -p $ANDROID_ROOT/.repo/local_manifests
-        # will uncomment once merge request accepted on halium repo for manifest
-        #wget https://raw.githubusercontent.com/Halium/halium-devices/halium-9.0/manifests/"$VENDOR"_"$DEVICE".xml -O $ANDROID_ROOT/.repo/local_manifests/$DEVICE.xml
-        wget https://gist.githubusercontent.com/Parmjot-Singh/f629bdc8cbb4a3cf93a3e65a2450f384/raw/b2f45fc6ac8240e33c07eb61e02c88dccc1ceb13/manifest.xml -O $ANDROID_ROOT/.repo/local_manifests/device.xml
-        repo sync -j8 -c --no-clone-bundle --no-tags
+    - name: Cache build repo files
+      id: cache-repo
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-repo-files
+      with:
+        path: /home/runner/work/halium
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/DateStamp') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
 
+      - if: ${{ steps.cache-repo.outputs.cache-hit != 'true' }}
+        name: Download source code
+        continue-on-error: true
+        run: |
+          source halium.env
+          mkdir -p $ANDROID_ROOT
+          cd $ANDROID_ROOT
+          repo init -u https://github.com/Halium/android -b halium-9.0 --depth=1
+          mkdir -p $ANDROID_ROOT/.repo/local_manifests
+          # will uncomment once merge request accepted on halium repo for manifest
+          #wget https://raw.githubusercontent.com/Halium/halium-devices/halium-9.0/manifests/"$VENDOR"_"$DEVICE".xml -O $ANDROID_ROOT/.repo/local_manifests/$DEVICE.xml
+          wget https://gist.githubusercontent.com/Parmjot-Singh/f629bdc8cbb4a3cf93a3e65a2450f384/raw/b2f45fc6ac8240e33c07eb61e02c88dccc1ceb13/manifest.xml -O $ANDROID_ROOT/.repo/local_manifests/device.xml
+          repo sync -j8 -c --no-clone-bundle --no-tags
+      
     - name: Install build dependencies
       run: |
         sudo apt update
@@ -77,18 +90,18 @@ jobs:
         chmod +x init-build-env.sh
         bash -x init-build-env.sh
     
-    - name: Build Hybris Boot image
-      run: |
-        chmod +x build-hybris.sh
-        bash -x build-hybris.sh
-      shell: bash
-    
-    - name : Upload Hybris Boot image
-      uses: actions/upload-artifact@master
-      with:
-        name: hybris-boot image
-        path: /home/runner/work/halium/out/target/product/dream2lte/hybris-boot.img
-
+#    - name: Build Hybris Boot image
+#      run: |
+#        chmod +x build-hybris.sh
+#        bash -x build-hybris.sh
+#      shell: bash
+#    
+#    - name : Upload Hybris Boot image
+#      uses: actions/upload-artifact@master
+#      with:
+#        name: hybris-boot image
+#        path: /home/runner/work/halium/out/target/product/dream2lte/hybris-boot.img
+#
     - name: Build Halium Boot image
       run: |
         chmod +x build-halium.sh
