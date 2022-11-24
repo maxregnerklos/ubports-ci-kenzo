@@ -49,16 +49,16 @@ jobs:
         git config --global user.name "UBports Galaxy S8+ CI"
         git config --global user.email "thisemaildoesnotexist@exist.com"
 
-#    - name: Free Disk Space (Ubuntu)
-#      uses: jlumbroso/free-disk-space@v1.1.0
-#      with:
-#        tool-cache: false
-#        
-#        android: false
-#        dotnet: true
-#        haskell: true
-#        large-packages: true
-#        swap-storage: false
+    - name: Free Disk Space (Ubuntu)
+      uses: jlumbroso/free-disk-space@v1.1.0
+      with:
+        tool-cache: true
+        
+        android: false
+        dotnet: true
+        haskell: true
+        large-packages: false
+        swap-storage: true
     
     - name: Download source code
       run: |
