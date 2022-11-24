@@ -48,6 +48,17 @@ jobs:
         chmod +x ~/bin/repo
         git config --global user.name "UBports Galaxy S8+ CI"
         git config --global user.email "thisemaildoesnotexist@exist.com"
+
+    - name: Free Disk Space (Ubuntu)
+      uses: jlumbroso/free-disk-space@v1.1.0
+      with:
+        tool-cache: false
+        
+        android: false
+        dotnet: true
+        haskell: true
+        large-packages: true
+        swap-storage: false
     
     - name: Cache build repo files
       id: cache-repo
@@ -111,7 +122,7 @@ jobs:
     - name : Upload Halium Boot image
       uses: actions/upload-artifact@master
       with:
-        name: halium-boot image
+        name: halium-boot.img
         path: /home/runner/work/halium/out/target/product/dream2lte/halium-boot.img
 
     - name: Build System image
@@ -123,7 +134,7 @@ jobs:
     - name : Upload System image
       uses: actions/upload-artifact@master
       with:
-        name: System image
+        name: system.img
         path: /home/runner/work/halium/out/target/product/dream2lte/system.img
 
     - name: Build Recovery image
@@ -135,5 +146,5 @@ jobs:
     - name : Upload Recovery image
       uses: actions/upload-artifact@master
       with:
-        name: System image
+        name: recovery.img
         path: /home/runner/work/halium/out/target/product/dream2lte/recovery.img
