@@ -29,7 +29,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@master
     
-    - name: Initialization environment
+    - name: Initialise runner machine
       run: |
         sudo apt-get update
         sudo apt-get install -y \
@@ -51,7 +51,7 @@ jobs:
         git config --global user.name "UBports Galaxy S8+ CI"
         git config --global user.email "thisemaildoesnotexist@exist.com"
 
-    - name: Downloading source code
+    - name: Download source code
       run: |
         source halium.env
         mkdir -p $ANDROID_ROOT
@@ -62,8 +62,8 @@ jobs:
         #wget https://raw.githubusercontent.com/Halium/halium-devices/halium-9.0/manifests/"$VENDOR"_"$DEVICE".xml -O $ANDROID_ROOT/.repo/local_manifests/$DEVICE.xml
         wget https://gist.githubusercontent.com/Parmjot-Singh/f629bdc8cbb4a3cf93a3e65a2450f384/raw/b2f45fc6ac8240e33c07eb61e02c88dccc1ceb13/manifest.xml -O $ANDROID_ROOT/.repo/local_manifests/device.xml
         repo sync -j8 -c --no-clone-bundle --no-tags
-    
-    - name: Build HAL
+
+    - name: Install build dependencies
       run: |
         sudo apt update
         sudo apt autoremove python3 -y
@@ -71,30 +71,56 @@ jobs:
         sudo ln -sf python2.7 /usr/bin/python
         chmod +x save-storage.sh
         bash -x save-storage.sh
-        chmod +x build-hal.sh
-        bash -x build-hal.sh
+
+    - name: Initialise build environment
+      run: |
+        chmod +x init-build-env.sh
+        bash -x init-build-env.sh
+    
+    - name: Build Hybris Boot image
+      run: |
+        chmod +x build-hybris.sh
+        bash -x build-hybris.sh
       shell: bash
     
-    - name : Upload boot image
+    - name : Upload Hybris Boot image
       uses: actions/upload-artifact@master
       with:
         name: hybris-boot image
         path: /home/runner/work/halium/out/target/product/dream2lte/hybris-boot.img
 
-    - name : Upload boot image
+    - name: Build Halium Boot image
+      run: |
+        chmod +x build-halium.sh
+        bash -x build-halium.sh
+      shell: bash
+
+    - name : Upload Halium Boot image
       uses: actions/upload-artifact@master
       with:
         name: halium-boot image
         path: /home/runner/work/halium/out/target/product/dream2lte/halium-boot.img
 
-    - name : Upload recovery image
-      uses: actions/upload-artifact@master
-      with:
-        name: Recovery image
-        path: /home/runner/work/halium/out/target/product/dream2lte/recovery.img
+    - name: Build System image
+      run: |
+        chmod +x build-system.sh
+        bash -x build-system.sh
+      shell: bash
 
-    - name : Upload system image
+    - name : Upload System image
       uses: actions/upload-artifact@master
       with:
         name: System image
         path: /home/runner/work/halium/out/target/product/dream2lte/system.img
+
+    - name: Build Recovery image
+      run: |
+        chmod +x build-recovery.sh
+        bash -x build-recovery.sh
+      shell: bash
+
+    - name : Upload Recovery image
+      uses: actions/upload-artifact@master
+      with:
+        name: System image
+        path: /home/runner/work/halium/out/target/product/dream2lte/recovery.img
