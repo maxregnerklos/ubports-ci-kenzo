@@ -48,7 +48,7 @@ jobs:
         chmod +x ~/bin/repo
         git config --global user.name "UBports Galaxy S8+ CI"
         git config --global user.email "thisemaildoesnotexist@exist.com"
-
+    
     - name: Cache build repo files
       id: cache-repo
       uses: actions/cache@v3
