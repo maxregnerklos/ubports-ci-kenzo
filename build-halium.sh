@@ -9,6 +9,3 @@ breakfast $DEVICE
 
 mka installclean
 mka halium-boot
-
-echo "md5sum halium-boot.img"
-md5sum $ANDROID_ROOT/out/target/product/dream2lte/halium-boot.img
